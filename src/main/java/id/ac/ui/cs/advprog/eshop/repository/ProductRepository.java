@@ -34,11 +34,11 @@ public class ProductRepository {
     }
 
     public Product edit(Product product) {
-        for (int i = 0; i < productData.size(); i++) {
-            Product p = productData.get(i);
-            if (p.getProductId().equals(product.getProductId())) {
-                productData.set(i, product);
-                return product;
+        for (Product existingProduct : productData) {
+            if (existingProduct.getProductId().equals(product.getProductId())) {
+                existingProduct.setProductName(product.getProductName());
+                existingProduct.setProductQuantity(product.getProductQuantity());
+                return existingProduct;
             }
         }
         return null;

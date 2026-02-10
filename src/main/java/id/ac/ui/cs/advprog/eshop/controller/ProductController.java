@@ -52,11 +52,15 @@ public class ProductController {
 
     @PostMapping("/edit")
     public String editProductPost(@Valid @ModelAttribute Product product, Model model, BindingResult bindingResult) {
+        System.out.println("Editing Product ID: " + product.getProductId());
         if (bindingResult.hasErrors()) {
             return "EditProduct";
         }
 
-        service.edit(product);
+        Product result = service.edit(product);
+        if (result == null) {
+            return "redirect:list"; // Or show an error page (later)
+        }
         return "redirect:list";
     }
 

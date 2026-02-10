@@ -68,7 +68,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testEditProduct() {
+    void testEditProductPositive() {
         Product product = new Product();
         product.setProductId(UUID.randomUUID());
         product.setProductName("Sampo Cap Bambang");
@@ -82,6 +82,7 @@ class ProductRepositoryTest {
 
         Product result = productRepository.edit(updatedProduct);
 
+        assertNotNull(result);
         assertEquals(updatedProduct.getProductName(), result.getProductName());
         assertEquals(updatedProduct.getProductQuantity(), result.getProductQuantity());
 
@@ -91,18 +92,18 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testEditProductNotFound() {
-        Product product = new Product();
-        product.setProductId(UUID.randomUUID());
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
+    void testEditProductNegative() {
+        Product unregisteredProduct = new Product();
+        unregisteredProduct.setProductId(UUID.randomUUID());
+        unregisteredProduct.setProductName("Produk Ilegal");
+        unregisteredProduct.setProductQuantity(1);
 
-        Product result = productRepository.edit(product);
+        Product result = productRepository.edit(unregisteredProduct);
         assertNull(result);
     }
 
     @Test
-    void testDeleteProduct() {
+    void testDeleteProductPositive() {
         Product product = new Product();
         product.setProductId(UUID.randomUUID());
         product.setProductName("Sampo Cap Bambang");
@@ -111,14 +112,25 @@ class ProductRepositoryTest {
 
         productRepository.delete(product.getProductId());
 
+        Product deletedProduct = productRepository.findById(product.getProductId());
+        assertNull(deletedProduct);
+
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
 
     @Test
-    void testDeleteProductNotFound() {
+    void testDeleteProductNegative() {
+        Product product = new Product();
+        product.setProductId(UUID.randomUUID());
+        product.setProductName("Sampo Tetap Ada");
+        product.setProductQuantity(50);
+        productRepository.create(product);
+
         productRepository.delete(UUID.randomUUID());
-        Iterator<Product> productIterator = productRepository.findAll();
-        assertFalse(productIterator.hasNext());
+
+        Product existingProduct = productRepository.findById(product.getProductId());
+        assertNotNull(existingProduct);
+        assertEquals("Sampo Tetap Ada", existingProduct.getProductName());
     }
 }
