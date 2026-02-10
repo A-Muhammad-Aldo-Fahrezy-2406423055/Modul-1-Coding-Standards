@@ -50,6 +50,8 @@ class EditProductFunctionalTest {
 
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
+        Thread.sleep(2000);
+
         String pageSource = driver.getPageSource();
         assertTrue(pageSource.contains("Sampo Edit"));
         assertTrue(pageSource.contains("200"));
