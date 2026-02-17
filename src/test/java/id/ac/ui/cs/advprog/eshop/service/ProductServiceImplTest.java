@@ -9,6 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,5 +76,30 @@ class ProductServiceImplTest {
         doNothing().when(productRepository).delete(product.getProductId());
         productService.delete(product.getProductId());
         verify(productRepository, times(1)).delete(product.getProductId());
+    }
+
+    @Test
+    void testFindAll() {
+        // Arrange
+        List<Product> productList = new ArrayList<>();
+        productList.add(product); // Add the product created in setUp()
+
+        Product product2 = new Product();
+        product2.setProductId(UUID.randomUUID());
+        product2.setProductName("Sampo Cap Usep");
+        product2.setProductQuantity(50);
+        productList.add(product2);
+
+        // Mock the repository to return the iterator of our list
+        when(productRepository.findAll()).thenReturn(productList.iterator());
+
+        // Act
+        List<Product> result = productService.findAll();
+
+        // Assert
+        assertEquals(2, result.size()); // Verify list size
+        assertEquals(product.getProductId(), result.get(0).getProductId()); // Verify first product
+        assertEquals(product2.getProductId(), result.get(1).getProductId()); // Verify second product
+        verify(productRepository, times(1)).findAll(); // Verify repository was called
     }
 }

@@ -133,4 +133,48 @@ class ProductRepositoryTest {
         assertNotNull(existingProduct);
         assertEquals("Sampo Tetap Ada", existingProduct.getProductName());
     }
+
+    @Test
+    void testCreateWithNullId() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Null");
+        product.setProductQuantity(100);
+
+        Product createdProduct = productRepository.create(product);
+
+        assertNotNull(createdProduct.getProductId());
+        assertEquals("Sampo Cap Null", createdProduct.getProductName());
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        Product product = new Product();
+        product.setProductId(UUID.randomUUID());
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        UUID nonExistentId = UUID.randomUUID();
+        Product foundProduct = productRepository.findById(nonExistentId);
+
+        assertNull(foundProduct);
+    }
+
+    @Test
+    void testEditProductNotFound() {
+        Product product = new Product();
+        product.setProductId(UUID.randomUUID());
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product nonExistentProduct = new Product();
+        nonExistentProduct.setProductId(UUID.randomUUID());
+        nonExistentProduct.setProductName("Sampo Cap Angin");
+        nonExistentProduct.setProductQuantity(50);
+
+        Product result = productRepository.edit(nonExistentProduct);
+
+        assertNull(result);
+    }
 }

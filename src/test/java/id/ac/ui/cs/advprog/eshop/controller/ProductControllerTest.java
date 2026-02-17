@@ -102,4 +102,37 @@ class ProductControllerTest {
 
         verify(productService, times(1)).delete(product.getProductId());
     }
+
+    @Test
+    void testCreateProductPostWithValidationErrors() throws Exception {
+        mockMvc.perform(post("/product/create")
+                        .param("productName", "Sampo Cap Bambang")
+                        .param("productQuantity", "-1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("CreateProduct"));
+    }
+
+    @Test
+    void testEditProductPostWithValidationErrors() throws Exception {
+        mockMvc.perform(post("/product/edit")
+                        .param("productId", product.getProductId().toString())
+                        .param("productName", "Sampo Cap Bambang")
+                        .param("productQuantity", "-1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("EditProduct"));
+    }
+
+    @Test
+    void testEditProductPostWithNonExistentProduct() throws Exception {
+        when(productService.edit(any(Product.class))).thenReturn(null);
+
+        mockMvc.perform(post("/product/edit")
+                        .param("productId", product.getProductId().toString())
+                        .param("productName", "Sampo Cap Bambang")
+                        .param("productQuantity", "100"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("list"));
+
+        verify(productService, times(1)).edit(any(Product.class));
+    }
 }

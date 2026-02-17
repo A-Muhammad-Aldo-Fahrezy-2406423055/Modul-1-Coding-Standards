@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String createProductPost(@Valid @ModelAttribute Product product, Model model, BindingResult bindingResult) {
+    public String createProductPost(@Valid @ModelAttribute Product product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "CreateProduct";
         }
@@ -51,15 +51,14 @@ public class ProductController {
     }
 
     @PostMapping("/edit")
-    public String editProductPost(@Valid @ModelAttribute Product product, Model model, BindingResult bindingResult) {
-        System.out.println("Editing Product ID: " + product.getProductId());
+    public String editProductPost(@Valid @ModelAttribute Product product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "EditProduct";
         }
 
         Product result = service.edit(product);
         if (result == null) {
-            return "redirect:list"; // Or show an error page (later)
+            return "redirect:list";
         }
         return "redirect:list";
     }

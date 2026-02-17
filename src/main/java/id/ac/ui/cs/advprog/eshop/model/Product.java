@@ -14,9 +14,4 @@ public class Product {
     @Min(value=0, message="Quantity must be a positive number")
     private int productQuantity;
 
-    public void setProductQuantity(int productQuantity) {
-        if (productQuantity >= 0) {
-            this.productQuantity = productQuantity;
-        }
-    }
 }

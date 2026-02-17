@@ -49,7 +49,7 @@ public class ProductTest {
     void testGetProductQuantityIfNegative() {
         this.product.setProductQuantity(-1);
 
-        // Angka negatif dilarang, default back to previous data
-        assertEquals(100, this.product.getProductQuantity());
+        // We allow -1 since we moved the validation from setter function to request validator
+        assertEquals(-1, this.product.getProductQuantity());
     }
 }
