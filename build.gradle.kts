@@ -3,6 +3,7 @@ plugins {
     jacoco
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "7.1.0.6387"
 }
 
 group = "id.ac.ui.cs.advprog"
@@ -78,4 +79,12 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "A-Muhammad-Aldo-Fahrezy-2406423055_Module-02-CI-CD-DevOps")
+        property("sonar.organization", "a-muhammad-aldo-fahrezy-2406423055")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
