@@ -1,0 +1,16 @@
+name: Deploy to Koyeb
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment Info
+        run: |
+          echo "Deployment is handled by Koyeb (Pull-based)."
+          echo "Koyeb detects the push to 'main' and triggers the build using the Dockerfile."
