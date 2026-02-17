@@ -80,3 +80,11 @@ tasks.test {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
 }
+
+sonar {
+    properties {
+        property("sonar.projectKey", "muhammad-aldo-fahrezy-2406423055_module-02-ci-cd-devops")
+        property("sonar.organization", "muhammad-aldo-fahrezy-2406423055")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
+}
