@@ -27,7 +27,7 @@ public class CarRepository {
         return carData.iterator();
     }
 
-    public Car findByID(String id) {
+    public Car findById(String id) {
         for (Car car: carData) {
             if (car.getCarId().equals(id)) {
                 return car;
