@@ -17,13 +17,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-
-    private final ProductService service;
-
     @Autowired
-    public ProductController(ProductService service) {
-        this.service = service;
-    }
+    private ProductService service;
 
     @GetMapping("/create")
     public String createProductPage(Model model) {
@@ -49,9 +44,9 @@ public class ProductController {
         return "ProductList";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editProductPage(@PathVariable("id") UUID id, Model model) {
-        Product product = service.findById(id);
+    @GetMapping("/edit/{productId}")
+    public String editProductPage(@PathVariable("productId") UUID productId, Model model) {
+        Product product = service.findById(productId);
         model.addAttribute("product", product);
         return "EditProduct";
     }
@@ -70,9 +65,9 @@ public class ProductController {
         return "redirect:list";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") UUID id) {
-        service.delete(id);
+    @GetMapping("/delete/{productId}")
+    public String deleteProduct(@PathVariable("productId") UUID productId) {
+        service.delete(productId);
         return "redirect:../list";
     }
 }
@@ -82,10 +77,6 @@ public class ProductController {
 class CarController extends ProductController {
     @Autowired
     private CarServiceImpl carservice;
-
-    public CarController(ProductService service) {
-        super(service);
-    }
 
     @GetMapping("/createCar")
     public String createCarPage(Model model) {
