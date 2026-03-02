@@ -1,6 +1,8 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
+import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.model.Product;
+import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +17,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-
-    private final ProductService service;
-
     @Autowired
-    public ProductController(ProductService service) {
-        this.service = service;
-    }
+    private ProductService service;
 
     @GetMapping("/create")
     public String createProductPage(Model model) {
@@ -47,9 +44,9 @@ public class ProductController {
         return "ProductList";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editProductPage(@PathVariable("id") UUID id, Model model) {
-        Product product = service.findById(id);
+    @GetMapping("/edit/{productId}")
+    public String editProductPage(@PathVariable("productId") UUID productId, Model model) {
+        Product product = service.findById(productId);
         model.addAttribute("product", product);
         return "EditProduct";
     }
@@ -60,16 +57,17 @@ public class ProductController {
             return "EditProduct";
         }
 
+        System.out.println(product.getProductId());
         Product result = service.edit(product);
         if (result == null) {
-            return "redirect:list";
+            return "redirect:list"; // harusnya bikin error page
         }
         return "redirect:list";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") UUID id) {
-        service.delete(id);
+    @PostMapping("/delete/{productId}")
+    public String deleteProduct(@PathVariable("productId") UUID productId) {
+        service.delete(productId);
         return "redirect:../list";
     }
 }

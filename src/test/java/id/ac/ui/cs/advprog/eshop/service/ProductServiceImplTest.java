@@ -80,9 +80,8 @@ class ProductServiceImplTest {
 
     @Test
     void testFindAll() {
-        // Arrange
         List<Product> productList = new ArrayList<>();
-        productList.add(product); // Add the product created in setUp()
+        productList.add(product);
 
         Product product2 = new Product();
         product2.setProductId(UUID.randomUUID());
@@ -90,16 +89,13 @@ class ProductServiceImplTest {
         product2.setProductQuantity(50);
         productList.add(product2);
 
-        // Mock the repository to return the iterator of our list
         when(productRepository.findAll()).thenReturn(productList.iterator());
 
-        // Act
         List<Product> result = productService.findAll();
 
-        // Assert
-        assertEquals(2, result.size()); // Verify list size
-        assertEquals(product.getProductId(), result.get(0).getProductId()); // Verify first product
-        assertEquals(product2.getProductId(), result.get(1).getProductId()); // Verify second product
-        verify(productRepository, times(1)).findAll(); // Verify repository was called
+        assertEquals(2, result.size());
+        assertEquals(product.getProductId(), result.get(0).getProductId());
+        assertEquals(product2.getProductId(), result.get(1).getProductId());
+        verify(productRepository, times(1)).findAll();
     }
 }

@@ -96,7 +96,7 @@ class ProductControllerTest {
     void testDeleteProduct() throws Exception {
         doNothing().when(productService).delete(product.getProductId());
 
-        mockMvc.perform(get("/product/delete/" + product.getProductId()))
+        mockMvc.perform(post("/product/delete/" + product.getProductId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("../list"));
 
