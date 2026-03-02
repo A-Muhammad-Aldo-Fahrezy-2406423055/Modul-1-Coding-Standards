@@ -65,8 +65,10 @@ class CarServiceImplTest {
 
     @Test
     void testUpdate() {
-        doNothing().when(carRepository).update("car-123", car);
+        when(carRepository.update("car-123", car)).thenReturn(car);
+
         carService.update("car-123", car);
+
         verify(carRepository, times(1)).update("car-123", car);
     }
 
