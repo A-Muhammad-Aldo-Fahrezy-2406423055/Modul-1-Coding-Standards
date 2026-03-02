@@ -24,3 +24,43 @@ Sebagai tambahan refleksi, sejujurnya saya masih sedikit kebingungan dengan func
 2.  **Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!**
 
     Yes, I believe the current implementation meets the definition of both Continuous Integration and Continuous Deployment. For Continuous Integration, the setup uses GitHub Actions workflows (ci.yml and scorecard.yml) to automatically build the project, run the test suite, and perform security analysis every time a commit is pushed or a pull request is created. This ensures that new code is consistently integrated and verified against the existing codebase to catch errors early. For Continuous Deployment, the integration with Koyeb utilizes a pull-based deployment strategy where the platform automatically detects changes in the main branch, builds the application using the Dockerfile, and deploys it to the production environment. This automates the release process, ensuring that the latest version of the software is always available to users without manual server configuration.
+
+# Module 03 - Maintainability & OO Principles
+
+## Reflection 1
+
+### 1) Explain what principles you apply to your project!
+
+I have applied all five SOLID principles as the design foundation to keep the codebase maintainable and extensible in this module's exercise.
+
+Starting with the Single Responsibility Principle, each architectural layer is focused on a single role. ProductController and CarController are only responsible for HTTP routing and view binding, business logic lives entirely in the Service layer, and data persistence is handled by the Repository layer. I also removed unused imports and redundant code so that each class truly does only one thing.
+
+For the Open/Closed Principle, the repository classes (CarRepository and ProductRepository) were converted into interfaces so that the Service layer depends on abstractions rather than concrete implementations. If a new storage mechanism like PostgreSQL is needed in the future, a new class like ProductRepositoryPostgresImpl can be created without touching the Service code at all.
+
+Regarding the Liskov Substitution Principle, CarServiceImpl and ProductServiceImpl can substitute their respective interfaces without causing unexpected behavior. No method is improperly overridden or throws UnsupportedOperationException, meaning the behavioral contract of each interface is fully honored by its implementation.
+
+For the Interface Segregation Principle, interfaces are designed to be domain-specific. Keeping Car and Product contracts separate prevents bloated interfaces, so each class only depends on the methods that are actually relevant to it.
+
+Finally, for the Dependency Inversion Principle, the Service and Controller layers now depend on abstractions rather than concrete classes. CarController was also changed to inject CarService instead of CarServiceImpl directly, ensuring that high-level modules remain decoupled from low-level implementation details.
+
+---
+
+### 2) Explain the advantages of applying SOLID principles to your project with examples.
+
+Applying SOLID has a tangible impact, especially on testability and decoupling between components.
+
+From a testing perspective, constructor injection through interfaces makes unit testing significantly more straightforward. When writing tests for ProductServiceImpl or CarServiceImpl, I can inject Mockito mock objects directly via the constructor without needing to spin up the entire Spring ApplicationContext. This makes individual tests faster, more isolated, and easier to reason about.
+
+From an extensibility standpoint, because the Service layer only knows the repository interface, swapping the storage mechanism from an in-memory list to an external database will not affect business logic at all. The change only needs to happen in one place, the new implementation class, without cascading modifications across the rest of the codebase.
+
+---
+
+### 3) Explain the disadvantages of not applying SOLID principles to your project with examples.
+
+Ignoring SOLID makes code fragile and increasingly difficult to modify over time.
+
+When the Service layer depends directly on concrete repository classes, even a minor change to a constructor or method signature forces cascading changes throughout the codebase. In the case of CarServiceImpl depending on CarRepository as a concrete class, modifying the repository structure would require updating the Service layer as well, significantly increasing the risk of introducing unintended bugs in code that should not have needed to change at all.
+
+Beyond ripple effects, field injection also creates hidden dependencies that complicate testing. Without explicit constructor-declared dependencies, testing CarServiceImpl requires relying on reflection-based framework extensions, and in some cases even running the full Spring context, which slows down the entire test suite and undermines proper test isolation.
+
+Lastly, violating SRP by merging routing, validation, and persistence logic into a single Controller class creates a situation where unrelated changes interfere with one another. A modification to the database schema could accidentally break the web view, and in a team setting, this kind of entanglement increases the frequency of merge conflicts since multiple contributors end up modifying the same file for entirely different reasons.
