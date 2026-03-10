@@ -22,6 +22,6 @@ public class PaymentRepository {
     }
 
     public List<Payment> findAll() {
-        return new ArrayList<>(paymentData.values());
+        return java.util.Collections.unmodifiableList(new ArrayList<>(paymentData.values()));
     }
 }
