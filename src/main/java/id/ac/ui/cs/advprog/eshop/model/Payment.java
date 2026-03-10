@@ -22,26 +22,29 @@ public class Payment {
         this.order = order;
 
         if ("VOUCHER".equals(method)) {
-            String voucherCode = paymentData.get("voucherCode");
-            if (voucherCode != null && voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
-                int numCount = 0;
-                for (char c : voucherCode.toCharArray()) {
-                    if (Character.isDigit(c)) numCount++;
-                }
-                this.status = (numCount == 8) ? "SUCCESS" : "REJECTED";
-            } else {
-                this.status = "REJECTED";
-            }
+            this.status = validateVoucher() ? "SUCCESS" : "REJECTED";
         } else if ("CASH_ON_DELIVERY".equals(method)) {
-            String address = paymentData.get("address");
-            String deliveryFee = paymentData.get("deliveryFee");
-            if (address != null && !address.trim().isEmpty() && deliveryFee != null && !deliveryFee.trim().isEmpty()) {
-                this.status = "SUCCESS";
-            } else {
-                this.status = "REJECTED";
-            }
+            this.status = validateCOD() ? "SUCCESS" : "REJECTED";
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    private boolean validateVoucher() {
+        String voucherCode = paymentData.get("voucherCode");
+        if (voucherCode == null || voucherCode.length() != 16 || !voucherCode.startsWith("ESHOP")) {
+            return false;
+        }
+        int numCount = 0;
+        for (char c : voucherCode.toCharArray()) {
+            if (Character.isDigit(c)) numCount++;
+        }
+        return numCount == 8;
+    }
+
+    private boolean validateCOD() {
+        String address = paymentData.get("address");
+        String deliveryFee = paymentData.get("deliveryFee");
+        return address != null && !address.trim().isEmpty() && deliveryFee != null && !deliveryFee.trim().isEmpty();
     }
 }
