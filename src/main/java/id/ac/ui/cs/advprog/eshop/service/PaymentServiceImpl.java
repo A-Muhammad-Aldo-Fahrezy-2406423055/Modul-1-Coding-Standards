@@ -26,9 +26,9 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment setStatus(Payment payment, String status) {
         payment.setStatus(status);
         if ("SUCCESS".equals(status)) {
-            payment.getOrder().setStatus("SUCCESS");
+            payment.getOrder().setStatus(id.ac.ui.cs.advprog.eshop.enums.OrderStatus.SUCCESS.getValue());
         } else if ("REJECTED".equals(status)) {
-            payment.getOrder().setStatus("FAILED");
+            payment.getOrder().setStatus(id.ac.ui.cs.advprog.eshop.enums.OrderStatus.FAILED.getValue());
         }
         return paymentRepository.save(payment);
     }
