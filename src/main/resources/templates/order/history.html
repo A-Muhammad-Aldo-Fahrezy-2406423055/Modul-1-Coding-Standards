@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><title>Order History</title></head>
+<body>
+<h1>Order History</h1>
+<form th:action="@{/order/history}" method="post">
+    <label>Author Name: <input type="text" name="author" required/></label>
+    <button type="submit">Search</button>
+</form>
+<div th:if="${orders != null}">
+    <ul>
+        <li th:each="order : ${orders}" th:text="${order.id} + ' - ' + ${order.status}"></li>
+    </ul>
+</div>
+</body>
+</html>
