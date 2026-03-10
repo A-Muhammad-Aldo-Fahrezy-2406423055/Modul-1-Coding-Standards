@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Detail</title>
+</head>
+<body>
+<h1>Payment Details</h1>
+
+<div th:if="${payment != null}">
+    <p><strong>Payment ID:</strong> <span th:text="${payment.id}"></span></p>
+    <p><strong>Payment Method:</strong> <span th:text="${payment.method}"></span></p>
+    <p><strong>Payment Status:</strong> <span th:text="${payment.status}"></span></p>
+    <p><strong>Order ID:</strong> <span th:text="${payment.order.id}"></span></p>
+</div>
+
+<div th:if="${payment == null}">
+    <p>Error: Payment data not found for the requested ID.</p>
+</div>
+
+<br>
+<a th:href="@{/payment/detail}">Back to Search Form</a>
+</body>
+</html>
